@@ -1,183 +1,389 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SHGYGU</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Bestie Story — One File (Corrected)</title>
+
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: "Poppins", sans-serif;
-        background: linear-gradient(135deg, #ff9ecb, #ffd3e8, #fff0f7);
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-    }
-    .container {
-        background: rgba(255, 255, 255, 0.9);
-        padding: 30px 25px;
-        width: 90%;
-        max-width: 420px;
-        border-radius: 20px;
-        box-shadow: 0 8px 30px rgba(255, 70, 150, 0.25);
-        text-align: center;
-        animation: fadeIn 0.7s ease;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: scale(0.9); }
-        to { opacity: 1; transform: scale(1); }
-    }
-    h2 {
-        font-size: 1.8rem;
-        margin-bottom: 10px;
-        color: #ff0084;
-    }
-    p {
-        font-size: 1.2rem;
-        color: #ff3f8b;
-        margin-top: 8px;
-        line-height: 1.4;
-    }
-    input {
-        width: 90%;
-        padding: 10px;
-        margin-top: 10px;
-        border: 2px solid #ff80b7;
-        border-radius: 10px;
-        outline: none;
-        font-size: 1rem;
-        text-align: center;
-    }
-    button {
-        margin-top: 15px;
-        padding: 10px 20px;
-        font-size: 1.2rem;
-        background: #ff4da6;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-    button:hover {
-        background: #ff007f;
-    }
-    .gif {
-        width: 180px;
-        margin: 10px auto;
-        border-radius: 15px;
-        display: block;
-    }
+:root{
+  --bg1: linear-gradient(135deg,#d66bff,#ff93d3,#ffe4fa);
+  --accent:#c428ff;
+  --accent-dark:#9c00d4;
+  --card:#fff0f5;
+  --text:#4b003b;
+}
+html,body{height:100%;margin:0;padding:0}
+body{
+  font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background:var(--bg1);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow:auto;
+}
+
+/* soft floating ornament */
+.bg-ornament::before{
+  content:"💜 ✨ 💖 🌸 💕";
+  position:fixed;
+  left:0;right:0;
+  top:6%;
+  font-size:4.6rem;
+  text-align:center;
+  opacity:0.07;
+  transform:translateY(0);
+  animation:floatUp 16s linear infinite;
+  pointer-events:none;
+}
+@keyframes floatUp{0%{transform:translateY(0)}100%{transform:translateY(-320px)}}
+
+/* card */
+.card{
+  width:100%;
+  max-width:780px;
+  background:rgba(255,255,255,0.97);
+  border-radius:18px;
+  box-shadow:0 18px 50px rgba(120,30,140,0.16);
+  padding:22px;
+  text-align:center;
+  color:var(--text);
+  max-height:92vh;
+  overflow:auto;
+}
+
+/* slide area */
+.slide{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  padding:8px 12px 8px 12px;
+  gap:6px;
+  min-height:120px;
+}
+.slide h1{
+  margin:0;
+  font-size:1.6rem;
+  color:var(--accent);
+  line-height:1.12;
+  letter-spacing:0.2px;
+  font-weight:800;
+}
+.slide .sub{
+  margin:0;
+  color:#7a0068;
+  font-weight:600;
+  font-size:1rem;
+  margin-top:4px;
+}
+
+/* sparkle emoji */
+.sparkle{font-size:36px;margin-top:6px;display:inline-block;animation:spinSpark 2s linear infinite;opacity:.95}
+@keyframes spinSpark{0%{transform:rotate(0) scale(.96);opacity:.9}50%{transform:rotate(18deg) scale(1.04);opacity:1}100%{transform:rotate(0) scale(.96);opacity:.9}}
+
+/* chapters */
+.chapter{ text-align:left;background:linear-gradient(180deg,#fff7fb,#fff0f5);border-radius:12px;padding:12px;box-shadow:0 8px 24px rgba(200,60,160,0.06);max-width:720px;margin:0 auto;margin-top:8px; }
+.chapter h2{margin:0;color:#c300a8;font-size:1.05rem}
+.chapter p{margin:6px 0 0 0;color:#4b003b;line-height:1.35;font-size:0.98rem}
+
+/* input */
+.answer-row{margin-top:8px;display:flex;justify-content:center}
+input.answer{
+  padding:10px 12px;
+  width:84%;
+  max-width:520px;
+  border-radius:10px;
+  border:2px solid rgba(196,80,200,0.5);
+  outline:none;
+  font-size:1rem;
+  text-align:center;
+  background:white;
+}
+
+/* message */
+.message{margin-top:12px;font-weight:700;color:#d40057;min-height:28px;}
+
+/* controls */
+.controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.btn{
+  background:var(--accent);
+  color:white;
+  padding:10px 16px;
+  border-radius:999px;
+  border:none;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 8px 20px rgba(140,30,200,0.12);
+  transition:transform .12s ease,background .12s ease;
+}
+.btn:hover{transform:translateY(-4px);background:var(--accent-dark)}
+.btn.ghost{background:transparent;color:var(--accent);border:2px solid rgba(196,80,200,0.18);box-shadow:none}
+.btn.small{padding:8px 12px;font-size:0.95rem}
+.btn.hidden{display:none}
+
+/* subtle animations */
+.fadeIn{animation:fadeIn .45s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* confetti */
+.confetti-wrap{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9999;overflow:hidden;display:none}
+.confetti-wrap.show{display:block}
+.confetti-piece{position:absolute;width:8px;height:12px;border-radius:2px;opacity:0.95;transform-origin:center;animation:confettiFall linear forwards}
+@keyframes confettiFall{0%{transform:translateY(-30vh) rotate(0deg);opacity:1}100%{transform:translateY(120vh) rotate(720deg);opacity:0.9}}
+
+/* final hearts */
+.heart-wrap{display:flex;justify-content:center;gap:10px;margin-top:10px}
+.heart{font-size:40px;animation:heartPop 1.6s ease-in-out infinite;transform-origin:center}
+.heart:nth-child(2){animation-delay:0.15s}
+.heart:nth-child(3){animation-delay:0.3s}
+@keyframes heartPop{0%{transform:scale(.88);opacity:.8}50%{transform:scale(1.12);opacity:1}100%{transform:scale(.88);opacity:.8}}
+
+/* responsive */
+@media (max-width:720px){
+  .card{padding:16px}
+  .slide h1{font-size:1.35rem}
+  input.answer{width:88%}
+}
+@media (max-width:420px){
+  .card{padding:14px;border-radius:14px}
+}
+
+/* tighten heading-to-text gap */
+.slide .sub { margin-top: 6px; }
+.chapter p { margin-top: 6px; }
 </style>
 </head>
-<body>
+<body class="bg-ornament">
 
-<div class="container">
-    <h2 id="title"></h2>
-    <p id="text"></p>
-    <img id="gif" class="gif" style="display:none;" />
-    <input id="answerBox" style="display:none;" />
-    <div id="buttons"></div>
-</div>
+  <div class="card" id="app" role="application" aria-labelledby="mainTitle">
+    <div id="slideArea" class="slide fadeIn">
+      <h1 id="mainTitle">HELLO EVERYONE'S BESTIE</h1>
+      <div class="sub">answer one question</div>
+      <div class="sparkle" aria-hidden="true">✨</div>
+    </div>
+
+    <div id="contentArea" style="margin-top:6px"></div>
+    <div id="message" class="message" aria-live="polite"></div>
+
+    <div class="controls" id="controls">
+      <button class="btn" id="nextBtn">Next ➜</button>
+    </div>
+  </div>
+
+  <div id="confettiWrap" class="confetti-wrap" aria-hidden="true"></div>
 
 <script>
-let slide = 0;
-
+/* ======= Slides (ordered precisely to your spec) ======= */
 const slides = [
-    { title: "HELLO EVERYONE'S BESTIE", text: "Answer one question👇", type: "next" },
+  // 0 first slide - exact wording
+  { type:'intro', title:"HELLO EVERYONE'S BESTIE", subtitle:"answer one question" },
 
-    { title: "QUESTION TIME ✨", text: "Press next for the question👇", type: "next" },
+  // 1 second slide - press next for question
+  { type:'info', title:"Get ready", subtitle:"press next for question" },
 
-    { title: "QUESTION", text: "Which serial best describes our relationship?", type: "input", answer: "YEH RISHTA KYA KEHLATA HAI" },
+  // 2 input question slide
+  { type:'input', title:"Which serial best describes our relationship?", subtitle:"(Type the answer in ALL CAPITALS)", answer:"YEH RISHTA KYA KEHLATA HAI" },
 
-    { title: "CH01: Strangers", text: "Meet Riddhi, who is never in hostel and made a (thankfully now an ex) boyfriend in 10 days 😭💀", type: "next" },
+  // 3 CH01
+  { type:'chapter', id:'CH01', heading:'CH01: Strangers', body:"Meet Riddhi — who was never in hostel and made a (thankfully now is an ex) boyfriend in 10 days." },
 
-    { title: "CH02: JUST FRIENDS", text: "Hey Ambika listen: Prince is not a good guy (as if I didn't know). Don't spend time with him (as if I was spending). 🙄😂", type: "next" },
+  // 4 CH02
+  { type:'chapter', id:'CH02', heading:'CH02: JUST FRIENDS', body:"Hey Ambika — listen, Prince is not a good guy (as if I didn't know). Don't spend time with him (as if I was spending)." },
 
-    { title: "CH03: ELDER SISTER", text: "I don't know why I even said you are my elder sister when I was always the one doing all the thinking AND now cooking too 😭🍳", type: "next" },
+  // 5 CH03 (now cooking too)
+  { type:'chapter', id:'CH03', heading:'CH03: ELDER SISTER', body:"I don't know why I even said you are my elder sister when I was always the one doing all the thinking and now cooking too." },
 
-    { title: "CH04: ARE THEY JUST FRIENDS?", text: "EVERYONE: Aren't they always together like glued to each other? Are they just friends? (Nothing serious... just personal thinking. Flirting with you wasn’t that bad... or should I say it was good 😏😂 JUST A JOKE!)", type: "next" },
+  // 6 CH04
+  { type:'chapter', id:'CH04', heading:'CH04: ARE THEY JUST FRIENDS?', body:"EVERYONE: Aren't they always together like glued to each other? Are they just friends? (Nothing serious — just personal thinking. Flirting with you was not that bad — or should I say it was good. By the way the last part was a joke.)" },
 
-    { title: "CH05: LIFE LONG OGGY & COCKROACH", text: "It's the only thing that's 100% true about us (except you being everyone's bestie). And personally it's the best thing I like about us ❤️✨", type: "next" },
+  // 7 CH05
+  { type:'chapter', id:'CH05', heading:'CH05: LIFE LONG OGGY & COCKROACH', body:"It's the only thing that's 100% true about us (except you being everyone's bestie). And personally it is the best thing I like about us (except some 1 2 4 5 ... 1000 or more things but those all are about me)." },
 
-    { title: "THE END?", text: "What now? Ho gaya khatam. Tata bye bye 👋💞", type: "next" },
+  // 8 what now slide
+  { type:'text', title:"What now? Ho gaya. Khatam. Tata. Bye bye." },
 
-    { title: "WAIT ✋", text: "Be updated with writer Ambika to get new chapters unlocked 🔓😎", type: "next" },
+  // 9 be updated
+  { type:'text', title:"Be updated with writer Ambika to get new chapters unlocked" },
 
-    { title: "OH!", text: "By the way tumhare chakkar me main chiz bhul gaye na. Bad girl 😤😂", type: "next" },
+  // 10 main chiz mention (single slide)
+  { type:'text', title:"By the way tumhare chakkar me main chiz bhul gaye na. Bad girl." },
 
-    { title: "QUESTION", text: "Do you want to know what is the main chiz?", type: "yesno" },
+  // 11 branch question: do you want to know main chiz?
+  { type:'branch_question', title:"Do you want to know what the main chiz is?" },
 
-    { title: "ANSWER", text: "By the way agar mere favourite foods hote to definitely gajar ka halwa in that list would be very high (specially made by you... just joking) 😂🥕✨", type: "next" },
+  // 12 favourite-food joke slide (single)
+  { type:'text', title:"By the way agar mere favourite foods hote to definitely gajar ka halwa in that list would be very high (specially made by you.... just joking)" },
 
-    { title: "HEARTFELT NOTE", text: "Jokes apart, this birthday was literally very good... like the BEST till now. (Itna achha ki laga thankfully hum hostel me the) 🎉💕", type: "next" },
+  // 13 birthday best slide
+  { type:'text', title:"Jokes apart — ye birthday literally kaafi achha tha, like the best till now (itna achha ki laga thankfully hum hostel me the)" },
 
-    { title: "THANK YOU!", text: "THANK YOU SO MUCH FOR BEING ONE OF THE MOST IMPORTANT REASONS FOR SUCH A GOOD BIRTHDAY ❤️ (By the way ye joke hi tha) 😂", type: "next" },
+  // 14 thank you slide
+  { type:'text', title:"THANK YOU SO MUCH FOR BEING ONE OF THE MOST IMPORTANT REASONS FOR SUCH A GOOD BIRTHDAY (By the way ye joke hi tha)" },
 
-    { title: "BYE BYE 👋💖", text: "Stay awesome, bestie! ⭐", type: "end" }
+  // 15 final bye slide (no Next button)
+  { type:'final', title:"BYE BYE 👋💞" }
 ];
 
-function render() {
-    const s = slides[slide];
-    document.getElementById("title").innerText = s.title;
-    document.getElementById("text").innerText = s.text;
+let idx = 0;
 
-    document.getElementById("gif").style.display = "none";
+// DOM refs
+const slideArea = document.getElementById('slideArea');
+const contentArea = document.getElementById('contentArea');
+const messageArea = document.getElementById('message');
+const controls = document.getElementById('controls');
+const nextBtn = document.getElementById('nextBtn');
+const confettiWrap = document.getElementById('confettiWrap');
 
-    const answerBox = document.getElementById("answerBox");
-    const btnBox = document.getElementById("buttons");
-
-    answerBox.style.display = "none";
-    btnBox.innerHTML = "";
-
-    if (s.type === "next") {
-        btnBox.innerHTML = `<button onclick="nextSlide()">Next</button>`;
-    }
-    else if (s.type === "input") {
-        answerBox.style.display = "block";
-        btnBox.innerHTML = `<button onclick="checkAnswer()">Submit</button>`;
-    }
-    else if (s.type === "yesno") {
-        btnBox.innerHTML = `
-            <button onclick="yes()">Yes</button>
-            <button onclick="no()">No</button>
-        `;
-    }
+function clearAreas(){
+  contentArea.innerHTML = '';
+  messageArea.textContent = '';
+  Array.from(controls.querySelectorAll('.dynamic')).forEach(el=>el.remove());
 }
 
-function nextSlide() {
-    slide++;
+function escapeHtml(s){ return (s||'').toString().replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
+
+function render(){
+  clearAreas();
+  const s = slides[idx];
+
+  // final slide: no Next
+  if(s.type === 'final'){
+    slideArea.innerHTML = `<h1 class="fadeIn">${escapeHtml(s.title)}</h1>`;
+    // hearts
+    const hearts = document.createElement('div'); hearts.className='heart-wrap fadeIn';
+    hearts.innerHTML = `<div class="heart">💖</div><div class="heart">💞</div><div class="heart">💗</div>`;
+    contentArea.appendChild(hearts);
+    nextBtn.style.display = 'none';
+    return;
+  }
+
+  if(s.type === 'intro' || s.type === 'info'){
+    slideArea.innerHTML = `<h1 class="fadeIn">${escapeHtml(s.title)}</h1><div class="sub">${escapeHtml(s.subtitle||'')}</div><div class="sparkle" aria-hidden="true">✨</div>`;
+    nextBtn.style.display = 'inline-block';
+  }
+  else if(s.type === 'input'){
+    slideArea.innerHTML = `<h1 class="fadeIn">${escapeHtml(s.title)}</h1><div class="sub">${escapeHtml(s.subtitle||'')}</div>`;
+    const row = document.createElement('div'); row.className='answer-row fadeIn';
+    row.innerHTML = `<input id="answerBox" class="answer" type="text" inputmode="text" placeholder="TYPE IN ALL CAPITALS">`;
+    contentArea.appendChild(row);
+    const hint = document.createElement('div'); hint.className='hint'; hint.textContent='Write the answer IN ALL CAPITALS';
+    contentArea.appendChild(hint);
+    const submit = document.createElement('button'); submit.className='btn dynamic'; submit.textContent='Submit';
+    submit.addEventListener('click', handleInputSubmit);
+    controls.appendChild(submit);
+    nextBtn.style.display = 'none';
+  }
+  else if(s.type === 'chapter'){
+    slideArea.innerHTML = `<h1 class="fadeIn">${escapeHtml(s.heading)}</h1>`;
+    const box = document.createElement('div'); box.className='chapter fadeIn';
+    box.innerHTML = `<h2>${escapeHtml(s.heading)}</h2><p>${escapeHtml(s.body)}</p>`;
+    contentArea.appendChild(box);
+    nextBtn.style.display = 'inline-block';
+  }
+  else if(s.type === 'text'){
+    slideArea.innerHTML = `<h1 class="fadeIn">${escapeHtml(s.title)}</h1>`;
+    nextBtn.style.display = 'inline-block';
+  }
+  else if(s.type === 'branch_question'){
+    slideArea.innerHTML = `<h1 class="fadeIn">${escapeHtml(s.title)}</h1>`;
+    const yes = document.createElement('button'); yes.className='btn dynamic'; yes.textContent='Yes 😘';
+    const no = document.createElement('button'); no.className='btn ghost dynamic'; no.textContent='No 😏';
+    controls.appendChild(yes); controls.appendChild(no);
+    nextBtn.style.display = 'none';
+    yes.addEventListener('click', function(){
+      messageArea.style.color='#a300c5';
+      messageArea.innerHTML = slides.find(sl=>sl.type==='text' && sl.title && sl.title.startsWith('By the way agar')).title;
+      nextBtn.style.display = 'inline-block';
+    });
+    no.addEventListener('click', function(){
+      messageArea.style.color='red';
+      messageArea.innerHTML = 'Priority matters. Choose:';
+      const tryAgain = document.createElement('button'); tryAgain.className='btn dynamic small'; tryAgain.textContent='Try Again';
+      const skip = document.createElement('button'); skip.className='btn ghost dynamic small'; skip.textContent='Skip';
+      controls.appendChild(tryAgain); controls.appendChild(skip);
+      tryAgain.addEventListener('click', function(){ messageArea.textContent=''; render(); });
+      skip.addEventListener('click', function(){
+        messageArea.style.color='#a300c5';
+        messageArea.innerHTML = slides.find(sl=>sl.type==='text' && sl.title && sl.title.startsWith('By the way agar')).title;
+        nextBtn.style.display='inline-block';
+      });
+    });
+  }
+}
+
+// confetti generator
+function createConfetti(){
+  confettiWrap.innerHTML = '';
+  const colors = ['#FF5C8A','#FFD166','#7BD389','#9AD0F5','#C28CFF','#FF9FC3'];
+  const count = 26;
+  for(let i=0;i<count;i++){
+    const el = document.createElement('div');
+    el.className='confetti-piece';
+    el.style.background = colors[i % colors.length];
+    el.style.left = (Math.random()*100) + '%';
+    el.style.top = (-Math.random()*30 - 10) + 'vh';
+    const w = 6 + Math.random()*10;
+    el.style.width = w + 'px';
+    el.style.height = Math.round(w*1.4) + 'px';
+    const dur = 1200 + Math.random()*900;
+    el.style.animationDuration = dur + 'ms';
+    el.style.animationDelay = (Math.random()*120) + 'ms';
+    confettiWrap.appendChild(el);
+  }
+}
+function burstConfetti(){
+  createConfetti();
+  confettiWrap.classList.add('show');
+  setTimeout(()=>{ confettiWrap.classList.remove('show'); confettiWrap.innerHTML=''; }, 1600);
+}
+
+// submit handler for serial question
+function handleInputSubmit(){
+  const box = document.getElementById('answerBox');
+  if(!box) return;
+  const val = box.value.trim().toUpperCase();
+  const correct = slides[2].answer;
+  if(val === correct){
+    messageArea.style.color='green';
+    messageArea.textContent = "PERFECT ANSWER BESTIEEE 😘🔥";
+    Array.from(controls.querySelectorAll('.dynamic')).forEach(el=>el.remove());
+    burstConfetti();
+    nextBtn.style.display = 'inline-block';
+  } else {
+    const playful = [
+      "Ayyooo wrong! 😂 Try again 💀",
+      "Bestieee you watch serials or not?? 😭",
+      "Naahhhh! You can do better 🤣",
+      "WRONG! This is why you fail GK tests 😂💔",
+      "Nope! That’s not it — think again babe! 😉"
+    ];
+    const msg = playful[Math.floor(Math.random()*playful.length)];
+    messageArea.style.color='#d40057';
+    messageArea.textContent = msg;
+    const boxEl = document.getElementById('answerBox');
+    if(boxEl) boxEl.animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:360});
+  }
+}
+
+// next button logic
+nextBtn.addEventListener('click', function(){
+  // if currently branch and message shown (Yes path) and Next clicked -> advance
+  if(slides[idx] && slides[idx].type==='branch_question'){
+    idx++;
     render();
-}
+    return;
+  }
+  idx++;
+  if(idx >= slides.length) idx = slides.length - 1;
+  render();
+});
 
-function checkAnswer() {
-    const user = document.getElementById("answerBox").value.trim().toUpperCase();
-    const correct = slides[slide].answer;
-
-    if (user === correct) {
-        slide++;
-        render();
-    } else {
-        document.getElementById("text").innerText = "WRONG 😭😭 TRY AGAIN BESTIE!!";
-    }
-}
-
-function yes() {
-    slide++;
-    render();
-}
-
-function no() {
-    document.getElementById("title").innerText = "Priority Matters 😤";
-    document.getElementById("text").innerText = "Try again 👇";
-    document.getElementById("buttons").innerHTML = `<button onclick="render()">Retry</button>`;
-}
-
+// initial render
 render();
 </script>
-
 </body>
 </html>
