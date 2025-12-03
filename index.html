@@ -6,7 +6,6 @@
 <title>Bestie Story — One File</title>
 
 <style>
-  /* --- Page styling (pastel / romantic theme) --- */
   :root{
     --bg1: linear-gradient(135deg,#d66bff,#ff93d3,#ffe4fa);
     --accent:#c428ff;
@@ -27,15 +26,15 @@
     overflow:auto;
   }
 
-  /* floating soft icons behind card */
+  /* floating ornament */
   .bg-ornament::before{
     content:"💜 ✨ 💖 🌸 💕 ✨ 💗";
     position:fixed;
     left:0;right:0;
-    top:10%;
+    top:8%;
     font-size:5.5rem;
     text-align:center;
-    opacity:0.09;
+    opacity:0.08;
     transform:translateY(0);
     animation:floatUp 18s linear infinite;
     pointer-events:none;
@@ -46,162 +45,180 @@
   .card{
     width:100%;
     max-width:760px;
-    background:rgba(255,255,255,0.95);
-    border-radius:22px;
-    box-shadow:0 18px 50px rgba(120,30,140,0.18);
-    padding:28px;
+    background:rgba(255,255,255,0.97);
+    border-radius:18px;
+    box-shadow:0 18px 50px rgba(120,30,140,0.16);
+    padding:20px;
     text-align:center;
     color:var(--text);
-    max-height:90vh;
+    max-height:92vh;
     overflow:auto;
   }
 
+  /* slide area */
   .slide{
-    min-height:160px;
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:18px 10px;
+    flex-direction:column;
+    padding:8px 12px 8px 12px;
+    gap:6px;
+    min-height:120px;
   }
-
   .slide h1{
     margin:0;
-    font-size:1.7rem;
+    font-size:1.6rem;
     color:var(--accent);
-    line-height:1.15;
-    letter-spacing:0.2px;
+    line-height:1.12;
+  }
+  .slide .sub{
+    margin:0;
+    color:#7a0068;
+    font-weight:600;
+    font-size:1rem;
   }
 
-  .sub { margin-top:10px; color:#7a0068; font-weight:600; }
-
-  .fadeIn {
-    animation:fadeIn 500ms ease both;
-  }
-  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-
-  /* input box */
-  .answer-row{margin-top:12px;display:flex;justify-content:center}
-  input.answer{
-    padding:12px 14px;
-    width:84%;
-    max-width:520px;
-    border-radius:12px;
-    border:2px solid rgba(196,80,200,0.6);
-    outline:none;
-    font-size:1.05rem;
-    text-align:center;
-    background:white;
-  }
-  .hint{font-size:0.86rem;color:#b2006e;margin-top:8px}
-
-  /* message */
-  .message{margin-top:14px;font-weight:600;color:#d40057;min-height:24px}
-
-  /* chapter box style */
+  /* tighter gap for chapters */
   .chapter{
     text-align:left;
     background:linear-gradient(180deg,#fff7fb,#fff0f5);
-    border-radius:14px;
-    padding:16px;
+    border-radius:12px;
+    padding:12px;
     box-shadow:0 8px 24px rgba(200,60,160,0.06);
     max-width:720px;
     margin:0 auto;
+    margin-top:8px;
   }
-  .chapter h2{margin:0;color:#c300a8;font-size:1.15rem}
-  .chapter p{margin:10px 0;color:#4b003b;line-height:1.45}
+  .chapter h2{margin:0;color:#c300a8;font-size:1.05rem}
+  .chapter p{margin:8px 0 0 0;color:#4b003b;line-height:1.35}
 
-  /* buttons */
-  .controls{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+  /* small GIFs */
+  .gif-inline{width:86px;height:auto;margin-top:6px;border-radius:10px}
+  .gif-final{width:170px;max-width:45%;height:auto;margin-top:10px}
+
+  /* input */
+  .answer-row{margin-top:8px;display:flex;justify-content:center}
+  input.answer{
+    padding:10px 12px;
+    width:84%;
+    max-width:520px;
+    border-radius:10px;
+    border:2px solid rgba(196,80,200,0.5);
+    outline:none;
+    font-size:1rem;
+    text-align:center;
+    background:white;
+  }
+  .hint{font-size:0.84rem;color:#b2006e;margin-top:6px}
+
+  /* message */
+  .message{margin-top:12px;font-weight:700;color:#d40057;min-height:26px}
+
+  /* controls */
+  .controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
   .btn{
     background:var(--accent);
     color:white;
-    padding:10px 18px;
+    padding:10px 16px;
     border-radius:999px;
     border:none;
     font-weight:700;
     cursor:pointer;
-    box-shadow:0 8px 20px rgba(140,30,200,0.14);
+    box-shadow:0 8px 20px rgba(140,30,200,0.12);
     transition:transform .12s ease,background .12s ease;
   }
   .btn:hover{transform:translateY(-4px);background:var(--accent-dark)}
-  .btn.ghost{background:transparent;color:var(--accent);border:2px solid rgba(196,80,200,0.2);box-shadow:none}
-  .small{padding:8px 12px;font-size:0.95rem}
+  .btn.ghost{background:transparent;color:var(--accent);border:2px solid rgba(196,80,200,0.18);box-shadow:none}
+  .btn.small{padding:8px 12px;font-size:0.95rem}
+  .btn.hidden{display:none}
 
-  /* responsive tweaks */
+  /* subtle animations */
+  .fadeIn{animation:fadeIn .45s ease both}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* confetti pop (on correct answer) */
+  .confetti {
+    position:fixed;
+    left:50%;
+    top:8%;
+    transform:translateX(-50%);
+    pointer-events:none;
+    z-index:1000;
+    opacity:0;
+    transition:opacity .3s ease;
+  }
+  .confetti.show{opacity:1;animation:confettiPop 1.2s linear;}
+  @keyframes confettiPop{
+    0%{transform:translateX(-50%) translateY(-20px) scale(.8)}
+    100%{transform:translateX(-50%) translateY(0) scale(1)}
+  }
+
+  /* responsive */
   @media (max-width:720px){
-    .card{padding:20px}
-    .slide h1{font-size:1.4rem}
+    .card{padding:16px}
+    .slide h1{font-size:1.35rem}
     input.answer{width:88%}
   }
   @media (max-width:420px){
-    .slide{padding:12px}
-    .controls{gap:8px}
-    .card{padding:16px;border-radius:16px}
+    .card{padding:14px;border-radius:14px}
+    .gif-inline{width:66px}
+    .gif-final{width:140px}
   }
 </style>
 </head>
 <body class="bg-ornament">
 
-  <div class="card" id="app">
-    <!-- slide area -->
+  <div class="card" id="app" role="application" aria-labelledby="mainTitle">
     <div id="slideArea" class="slide fadeIn">
       <h1 id="mainTitle">HELLO EVERYONE'S BESTIE</h1>
+      <div class="sub">answer one question</div>
+      <!-- small sparkle GIF under title for visual pop -->
+      <img src="https://i.imgur.com/6XgKQ6l.gif" alt="sparkle" class="gif-inline" />
     </div>
 
-    <!-- optional content area (input, chapters, messages) -->
-    <div id="contentArea" style="margin-top:8px"></div>
-
-    <!-- message area -->
+    <div id="contentArea" style="margin-top:6px"></div>
     <div id="message" class="message" aria-live="polite"></div>
 
-    <!-- controls -->
     <div class="controls" id="controls">
       <button class="btn" id="nextBtn">Next ➜</button>
-      <!-- dynamic buttons will be inserted here -->
+      <!-- dynamic buttons injected here -->
     </div>
   </div>
 
-<script>
-/* ---------- All slides & content as requested ---------- */
-/*
-Flow implemented:
-0: Intro slide: HELLO EVERYONE'S BESTIE + line "answer one question" (Next)
-1: Prompt slide: question instruction (Next)
-2: Input slide: "Which serial best describes our relationship?" with input box and submit
-   - correct answer (ALL CAPS): "YEH RISHTA KYA KEHLATA HAI" -> reveal Next to CH01
-   - wrong -> playful messages
-3: CH01: Strangers (chapter content) Next -> CH02
-4: CH02: JUST FRIENDS (content) Next -> CH03
-5: CH03: ELDER SISTER Next -> CH04
-6: CH04: ARE THEY JUST FRIENDS? Next -> CH05
-7: CH05: LIFE LONG OGGY & COCROACH Next -> "what now ho gaya khatam tata bye bye"
-8: "what now ho gaya khatam tata bye bye" Next -> "be updated with writer Ambika to get new chapters unlocked"
-9: "by the way tumhare chakkar me main chiz bhul gaye na. Bad girl" Next -> question: "Do u ant to know what is the main chiz?" (Yes/No)
-   - If No -> show "priority matters" and provide Try Again option (re-show question) or Continue to next slide
-   - If Yes -> show favourite food joke text then Next to continue
-10: "jokes apart ye birthday ... best till now" Next
-11: "THANK YOU SO MUCH FOR BEING ONE OF MOST IMPORTANT REASON FOR SUCH A GOOD BIRTHDAY ( By the way ye joke hi tha)" Next
-12: "BYE BYE" final (end)
-*/
+  <!-- confetti GIF (hidden, shown on correct answer) -->
+  <img id="confetti" class="confetti" src="https://i.imgur.com/4M7IWwP.gif" alt="confetti" />
 
+<script>
+/* ---------- Slides data (updated exactly per your instructions) ---------- */
 const slides = [
-  { type:'intro', title:"HELLO EVERYONE'S BESTIE", subtitle:"Answer one question" },
-  { type:'info', title:"Get ready", subtitle:"Press Next for the question" },
-  { type:'input', title:"Which serial best describes our relationship?", subtitle:"(Type your answer in ALL CAPITALS)" },
-  { type:'chapter', id:'CH01', heading:'CH01: Strangers', body:"Meet Riddhi — who was never in hostel and once made (thankfully now is an ex) a boyfriend." },
+  { type:'intro', title:"HELLO EVERYONE'S BESTIE", subtitle:"answer one question", gif:'https://i.imgur.com/6XgKQ6l.gif' },
+  { type:'info', title:"Get ready", subtitle:"press next for question", gif:'https://i.imgur.com/6XgKQ6l.gif' },
+  { type:'input', title:"Which serial best describes our relationship?", subtitle:"(Type the answer in ALL CAPITALS)" },
+
+  { type:'chapter', id:'CH01', heading:'CH01: Strangers', body:"Meet Riddhi — who was never in hostel and made a (thankfully now is an ex) boyfriend in 10 days." },
   { type:'chapter', id:'CH02', heading:'CH02: JUST FRIENDS', body:"Hey Ambika — listen, Prince is not a good guy (as if I didn't know). Don't spend time with him (as if I was spending)." },
-  { type:'chapter', id:'CH03', heading:'CH03: ELDER SISTER', body:"I don't know why I even said you are my elder sister when I was always the one doing all the thinking and no cooking." },
+  { type:'chapter', id:'CH03', heading:'CH03: ELDER SISTER', body:"I don't know why I even said you are my elder sister when I was always the one doing all the thinking and now cooking too." },
   { type:'chapter', id:'CH04', heading:'CH04: ARE THEY JUST FRIENDS?', body:"EVERYONE: Aren't they always together like glued to each other? Are they just friends? (Nothing serious — just personal thinking. Flirting with you was not that bad — or should I say it was good. By the way the last part was a joke.)" },
   { type:'chapter', id:'CH05', heading:'CH05: LIFE LONG OGGY & COCKROACH', body:"It's the only thing that's 100% true about us (except you being everyone's bestie). And personally it is the best thing I like about us (except some 1 2 4 5 ... 1000 or more things but those all are about me)." },
+
   { type:'text', title:"What now? Ho gaya. Khatam. Tata. Bye bye." },
-  { type:'text', title:"Be updated with writer Ambika to get new chapters unlocked" },
+  { type:'text', title:"Be updated with writer Ambika to get new chapters unlocked", subtitle:'' },
+
+  // single slide containing the "main chiz" line (merged into one slide)
   { type:'text', title:"By the way tumhare chakkar me main chiz bhul gaye na. Bad girl." },
-  { type:'branch_question', title:"Do u want to know what the main chiz is?" }, 
-  // Branch outcome slides / joke path
+
+  // branch question slide: Do you want to know...
+  { type:'branch_question', title:"Do you want to know what the main chiz is?" },
+
+  // the favourite-food joke slide (only one slide)
   { type:'text', title:"By the way agar mere favourite foods hote to definitely gajar ka halwa in that list would be very high (specially made by you.... just joking)" },
+
   { type:'text', title:"Jokes apart — ye birthday literally kaafi achha tha, like the best till now (itna achha ki laga thankfully hum hostel me the)" },
+
   { type:'text', title:"THANK YOU SO MUCH FOR BEING ONE OF THE MOST IMPORTANT REASONS FOR SUCH A GOOD BIRTHDAY (By the way ye joke hi tha)" },
-  { type:'text', title:"BYE BYE 👋💞" }
+
+  // single "BYE BYE" slide without Next button
+  { type:'final', title:"BYE BYE 👋💞", gif:'https://i.imgur.com/0y0R2vH.gif' }
 ];
 
 let idx = 0;
@@ -212,48 +229,62 @@ const contentArea = document.getElementById('contentArea');
 const messageArea = document.getElementById('message');
 const controls = document.getElementById('controls');
 const nextBtn = document.getElementById('nextBtn');
+const confetti = document.getElementById('confetti');
 
-// helper to clear content area and message
 function clearAreas(){
   contentArea.innerHTML = '';
   messageArea.textContent = '';
+  // remove any dynamic control buttons except Next
+  Array.from(controls.querySelectorAll('.dynamic')).forEach(el=>el.remove());
 }
 
-// render current slide
+// escape html helper
+function escapeHtml(s){ return (s||'').toString().replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
+
 function render(){
   clearAreas();
-  // remove any dynamic extra controls except Next
-  Array.from(controls.querySelectorAll('.dynamic')).forEach(el=>el.remove());
   const s = slides[idx];
 
-  // set main title area
+  // If final slide (no Next)
+  if(s.type==='final'){
+    slideArea.innerHTML = `<h1 class="fadeIn">${escapeHtml(s.title)}</h1>`;
+    if(s.gif){
+      const img = document.createElement('img'); img.src = s.gif; img.alt='bye'; img.className='gif-final fadeIn';
+      contentArea.appendChild(img);
+    }
+    // Hide Next button on final slide
+    nextBtn.style.display = 'none';
+    return;
+  }
+
+  // common for normal slides
   if(s.type==='intro' || s.type==='info'){
     slideArea.innerHTML = `<h1 class="fadeIn">${escapeHtml(s.title)}</h1><div class="sub">${escapeHtml(s.subtitle||'')}</div>`;
+    if(s.gif){
+      const img = document.createElement('img'); img.src = s.gif; img.alt='sparkle'; img.className='gif-inline fadeIn';
+      contentArea.appendChild(img);
+    }
     nextBtn.style.display = 'inline-block';
   }
   else if(s.type==='input'){
     slideArea.innerHTML = `<h1 class="fadeIn">${escapeHtml(s.title)}</h1><div class="sub">${escapeHtml(s.subtitle||'')}</div>`;
-    // show input UI
-    const inputRow = document.createElement('div');
-    inputRow.className = 'answer-row fadeIn';
-    inputRow.innerHTML = `<input id="answerBox" class="answer" type="text" placeholder="TYPE IN ALL CAPITALS">`;
+    // input UI
+    const row = document.createElement('div'); row.className='answer-row fadeIn';
+    row.innerHTML = `<input id="answerBox" class="answer" type="text" inputmode="text" placeholder="TYPE IN ALL CAPITALS">`;
+    contentArea.appendChild(row);
     const hint = document.createElement('div'); hint.className='hint'; hint.textContent='Write the answer IN ALL CAPITALS';
-    contentArea.appendChild(inputRow);
     contentArea.appendChild(hint);
-
-    // submit button
-    const submit = document.createElement('button');
-    submit.className='btn dynamic'; submit.textContent='Submit';
+    // add submit button as dynamic control
+    const submit = document.createElement('button'); submit.className='btn dynamic'; submit.textContent='Submit';
     submit.addEventListener('click', handleInputSubmit);
     controls.appendChild(submit);
-    // hide Next until correct
-    nextBtn.style.display = 'none';
+    nextBtn.style.display = 'none'; // only appear after correct
   }
   else if(s.type==='chapter'){
     slideArea.innerHTML = `<h1 class="fadeIn">${escapeHtml(s.heading)}</h1>`;
-    const c = document.createElement('div'); c.className='chapter fadeIn';
-    c.innerHTML = `<p>${escapeHtml(s.body)}</p>`;
-    contentArea.appendChild(c);
+    const box = document.createElement('div'); box.className='chapter fadeIn';
+    box.innerHTML = `<h2>${escapeHtml(s.heading)}</h2><p>${escapeHtml(s.body)}</p>`;
+    contentArea.appendChild(box);
     nextBtn.style.display = 'inline-block';
   }
   else if(s.type==='text'){
@@ -262,45 +293,36 @@ function render(){
   }
   else if(s.type==='branch_question'){
     slideArea.innerHTML = `<h1 class="fadeIn">${escapeHtml(s.title)}</h1>`;
-    // show yes/no
+    // yes/no buttons appear under controls
     const yes = document.createElement('button'); yes.className='btn dynamic'; yes.textContent='Yes 😘';
     const no = document.createElement('button'); no.className='btn ghost dynamic'; no.textContent='No 😏';
     controls.appendChild(yes); controls.appendChild(no);
-    // hide next until resolved (some flows may show next later)
-    nextBtn.style.display = 'none';
+    nextBtn.style.display = 'none'; // will show after response
     yes.addEventListener('click', function(){
-      // show favourite-food joke slide text (we put it at slides index 13)
+      // show the favourite-food joke (single slide content) immediately in message area
       messageArea.style.color='#a300c5';
-      messageArea.innerHTML = 'By the way agar mere favourite foods hote to definitely gajar ka halwa in that list would be very high (specially made by you.... just joking)';
-      // show a Next button to continue to subsequent slides (we'll enable Next to go to idx+1)
+      messageArea.innerHTML = slides.find(sl=>sl.type==='text' && sl.title && sl.title.startsWith('By the way agar')).title;
+      // show Next so user can continue
       nextBtn.style.display = 'inline-block';
-      // also mark idx to next content when Next clicked
     });
     no.addEventListener('click', function(){
       messageArea.style.color='red';
       messageArea.innerHTML = 'Priority matters. Choose:';
-      // present Try Again or Continue
+      // add try again and continue options
       const tryAgain = document.createElement('button'); tryAgain.className='btn dynamic small'; tryAgain.textContent='Try Again';
       const skip = document.createElement('button'); skip.className='btn ghost dynamic small'; skip.textContent='Skip';
       controls.appendChild(tryAgain); controls.appendChild(skip);
-      // Try Again -> re-render branch question (stay on same idx)
-      tryAgain.addEventListener('click', function(){
-        messageArea.textContent='';
-        // re-render same slide - resets controls
-        render();
-      });
+      tryAgain.addEventListener('click', function(){ messageArea.textContent=''; render(); });
       skip.addEventListener('click', function(){
-        // move forward to the joke slide (simulate as yes)
         messageArea.style.color='#a300c5';
-        messageArea.innerHTML = 'By the way agar mere favourite foods hote to definitely gajar ka halwa in that list would be very high (specially made by you.... just joking)';
-        // show next
+        messageArea.innerHTML = slides.find(sl=>sl.type==='text' && sl.title && sl.title.startsWith('By the way agar')).title;
         nextBtn.style.display='inline-block';
       });
     });
   }
 }
 
-// handle input submission for serial question
+// handle submit for serial question
 function handleInputSubmit(){
   const box = document.getElementById('answerBox');
   if(!box) return;
@@ -309,13 +331,13 @@ function handleInputSubmit(){
   if(val === correct){
     messageArea.style.color='green';
     messageArea.textContent = "PERFECT ANSWER BESTIEEE 😘🔥";
-    // remove submit buttons and allow Next
+    // remove submit and allow next
     Array.from(controls.querySelectorAll('.dynamic')).forEach(el=>el.remove());
-    nextBtn.style.display='inline-block';
-    // prevent accidental input re-submission
-    // move to next slide when Next clicked (normal flow)
+    // show confetti briefly
+    confetti.classList.add('show');
+    setTimeout(()=>confetti.classList.remove('show'),1400);
+    nextBtn.style.display = 'inline-block';
   } else {
-    // playful messages
     const playful = [
       "Ayyooo wrong! 😂 Try again 💀",
       "Bestieee you watch serials or not?? 😭",
@@ -326,41 +348,27 @@ function handleInputSubmit(){
     const msg = playful[Math.floor(Math.random()*playful.length)];
     messageArea.style.color='#d40057';
     messageArea.textContent = msg;
-    // small shake animation on input to hint wrong
+    // small shake on input
     box.animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:360});
   }
 }
 
-// escape HTML utility
-function escapeHtml(s){
-  return (s+'').replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]; });
-}
-
-// next button click handler
+// next button flow
 nextBtn.addEventListener('click', function(){
-  // special handling for branch_question: if messageArea shows the joke due to yes/no and user clicks next,
-  // we should move to the slide AFTER branch_question
-  const current = slides[idx];
-  if(current && current.type==='branch_question'){
-    // if nextBtn visible it means user saw joke or chose skip, proceed to next slide after branch_question
+  // if current is branch_question and next visible, proceed
+  if(slides[idx] && slides[idx].type==='branch_question'){
     idx++;
     render();
     return;
   }
-
-  // For other slides:
   idx++;
-  if(idx >= slides.length) {
-    // end - keep last slide visible
-    idx = slides.length - 1;
-  }
+  if(idx >= slides.length) idx = slides.length - 1;
   render();
 });
 
-// initialize
+// initial render
 render();
 
 </script>
 </body>
 </html>
-
