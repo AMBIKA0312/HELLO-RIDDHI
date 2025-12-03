@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Bestie Story — One File</title>
+<title>Bestie Story — One File (No External GIFs)</title>
 
 <style>
   :root{
@@ -26,7 +26,7 @@
     overflow:auto;
   }
 
-  /* floating ornament */
+  /* floating ornament (emoji string) */
   .bg-ornament::before{
     content:"💜 ✨ 💖 🌸 💕 ✨ 💗";
     position:fixed;
@@ -34,7 +34,7 @@
     top:8%;
     font-size:5.5rem;
     text-align:center;
-    opacity:0.08;
+    opacity:0.07;
     transform:translateY(0);
     animation:floatUp 18s linear infinite;
     pointer-events:none;
@@ -78,7 +78,22 @@
     font-size:1rem;
   }
 
-  /* tighter gap for chapters */
+  /* sparkles (inline) */
+  .sparkle {
+    font-size:42px;
+    margin-top:6px;
+    display:inline-block;
+    transform-origin:center;
+    animation:spinSpark 2s linear infinite;
+    opacity:0.95;
+  }
+  @keyframes spinSpark {
+    0%{transform:rotate(0) scale(0.95);opacity:0.9}
+    50%{transform:rotate(18deg) scale(1.05);opacity:1}
+    100%{transform:rotate(0) scale(0.95);opacity:0.9}
+  }
+
+  /* chapter block with tighter spacing */
   .chapter{
     text-align:left;
     background:linear-gradient(180deg,#fff7fb,#fff0f5);
@@ -91,10 +106,6 @@
   }
   .chapter h2{margin:0;color:#c300a8;font-size:1.05rem}
   .chapter p{margin:8px 0 0 0;color:#4b003b;line-height:1.35}
-
-  /* small GIFs */
-  .gif-inline{width:86px;height:auto;margin-top:6px;border-radius:10px}
-  .gif-final{width:170px;max-width:45%;height:auto;margin-top:10px}
 
   /* input */
   .answer-row{margin-top:8px;display:flex;justify-content:center}
@@ -136,21 +147,31 @@
   .fadeIn{animation:fadeIn .45s ease both}
   @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-  /* confetti pop (on correct answer) */
-  .confetti {
-    position:fixed;
-    left:50%;
-    top:8%;
-    transform:translateX(-50%);
-    pointer-events:none;
-    z-index:1000;
-    opacity:0;
-    transition:opacity .3s ease;
+  /* CONFETTI (CSS pieces) */
+  .confetti-wrap{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9999;overflow:hidden;display:none}
+  .confetti-wrap.show{display:block}
+  .confetti-piece{
+    position:absolute;
+    width:10px;height:14px;
+    opacity:0.95;
+    transform-origin:center;
+    border-radius:2px;
+    animation:confettiFall linear forwards;
   }
-  .confetti.show{opacity:1;animation:confettiPop 1.2s linear;}
-  @keyframes confettiPop{
-    0%{transform:translateX(-50%) translateY(-20px) scale(.8)}
-    100%{transform:translateX(-50%) translateY(0) scale(1)}
+  @keyframes confettiFall {
+    0%{transform:translateY(-30vh) rotate(0deg); opacity:1}
+    100%{transform:translateY(120vh) rotate(720deg); opacity:0.9}
+  }
+
+  /* hearts animation for final slide */
+  .heart-wrap{display:flex;justify-content:center;gap:10px;margin-top:10px}
+  .heart{font-size:44px;animation:heartPop 1.6s ease-in-out infinite;transform-origin:center}
+  .heart:nth-child(2){animation-delay:0.2s}
+  .heart:nth-child(3){animation-delay:0.4s}
+  @keyframes heartPop{
+    0%{transform:scale(0.85);opacity:0.8}
+    50%{transform:scale(1.12);opacity:1}
+    100%{transform:scale(0.85);opacity:0.8}
   }
 
   /* responsive */
@@ -161,8 +182,6 @@
   }
   @media (max-width:420px){
     .card{padding:14px;border-radius:14px}
-    .gif-inline{width:66px}
-    .gif-final{width:140px}
   }
 </style>
 </head>
@@ -172,8 +191,8 @@
     <div id="slideArea" class="slide fadeIn">
       <h1 id="mainTitle">HELLO EVERYONE'S BESTIE</h1>
       <div class="sub">answer one question</div>
-      <!-- small sparkle GIF under title for visual pop -->
-      <img src="https://i.imgur.com/6XgKQ6l.gif" alt="sparkle" class="gif-inline" />
+      <!-- inline sparkle -->
+      <div class="sparkle" aria-hidden="true">✨</div>
     </div>
 
     <div id="contentArea" style="margin-top:6px"></div>
@@ -181,18 +200,17 @@
 
     <div class="controls" id="controls">
       <button class="btn" id="nextBtn">Next ➜</button>
-      <!-- dynamic buttons injected here -->
     </div>
   </div>
 
-  <!-- confetti GIF (hidden, shown on correct answer) -->
-  <img id="confetti" class="confetti" src="https://i.imgur.com/4M7IWwP.gif" alt="confetti" />
+  <!-- confetti container: we will generate small colored pieces dynamically -->
+  <div id="confettiWrap" class="confetti-wrap" aria-hidden="true"></div>
 
 <script>
-/* ---------- Slides data (updated exactly per your instructions) ---------- */
+/* ---------- Slides data (updated per your instructions) ---------- */
 const slides = [
-  { type:'intro', title:"HELLO EVERYONE'S BESTIE", subtitle:"answer one question", gif:'https://i.imgur.com/6XgKQ6l.gif' },
-  { type:'info', title:"Get ready", subtitle:"press next for question", gif:'https://i.imgur.com/6XgKQ6l.gif' },
+  { type:'intro', title:"HELLO EVERYONE'S BESTIE", subtitle:"answer one question" },
+  { type:'info', title:"Get ready", subtitle:"press next for question" },
   { type:'input', title:"Which serial best describes our relationship?", subtitle:"(Type the answer in ALL CAPITALS)" },
 
   { type:'chapter', id:'CH01', heading:'CH01: Strangers', body:"Meet Riddhi — who was never in hostel and made a (thankfully now is an ex) boyfriend in 10 days." },
@@ -202,83 +220,67 @@ const slides = [
   { type:'chapter', id:'CH05', heading:'CH05: LIFE LONG OGGY & COCKROACH', body:"It's the only thing that's 100% true about us (except you being everyone's bestie). And personally it is the best thing I like about us (except some 1 2 4 5 ... 1000 or more things but those all are about me)." },
 
   { type:'text', title:"What now? Ho gaya. Khatam. Tata. Bye bye." },
-  { type:'text', title:"Be updated with writer Ambika to get new chapters unlocked", subtitle:'' },
+  { type:'text', title:"Be updated with writer Ambika to get new chapters unlocked" },
 
-  // single slide containing the "main chiz" line (merged into one slide)
   { type:'text', title:"By the way tumhare chakkar me main chiz bhul gaye na. Bad girl." },
 
-  // branch question slide: Do you want to know...
   { type:'branch_question', title:"Do you want to know what the main chiz is?" },
 
-  // the favourite-food joke slide (only one slide)
   { type:'text', title:"By the way agar mere favourite foods hote to definitely gajar ka halwa in that list would be very high (specially made by you.... just joking)" },
 
   { type:'text', title:"Jokes apart — ye birthday literally kaafi achha tha, like the best till now (itna achha ki laga thankfully hum hostel me the)" },
 
   { type:'text', title:"THANK YOU SO MUCH FOR BEING ONE OF THE MOST IMPORTANT REASONS FOR SUCH A GOOD BIRTHDAY (By the way ye joke hi tha)" },
 
-  // single "BYE BYE" slide without Next button
-  { type:'final', title:"BYE BYE 👋💞", gif:'https://i.imgur.com/0y0R2vH.gif' }
+  { type:'final', title:"BYE BYE 👋💞" }
 ];
 
 let idx = 0;
-
-// DOM refs
 const slideArea = document.getElementById('slideArea');
 const contentArea = document.getElementById('contentArea');
 const messageArea = document.getElementById('message');
 const controls = document.getElementById('controls');
 const nextBtn = document.getElementById('nextBtn');
-const confetti = document.getElementById('confetti');
+const confettiWrap = document.getElementById('confettiWrap');
 
 function clearAreas(){
   contentArea.innerHTML = '';
   messageArea.textContent = '';
-  // remove any dynamic control buttons except Next
   Array.from(controls.querySelectorAll('.dynamic')).forEach(el=>el.remove());
 }
 
-// escape html helper
 function escapeHtml(s){ return (s||'').toString().replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
 
 function render(){
   clearAreas();
   const s = slides[idx];
 
-  // If final slide (no Next)
   if(s.type==='final'){
     slideArea.innerHTML = `<h1 class="fadeIn">${escapeHtml(s.title)}</h1>`;
-    if(s.gif){
-      const img = document.createElement('img'); img.src = s.gif; img.alt='bye'; img.className='gif-final fadeIn';
-      contentArea.appendChild(img);
-    }
-    // Hide Next button on final slide
+    // final hearts animation
+    const hearts = document.createElement('div'); hearts.className='heart-wrap fadeIn';
+    hearts.innerHTML = `<div class="heart">💖</div><div class="heart">💞</div><div class="heart">💗</div>`;
+    contentArea.appendChild(hearts);
     nextBtn.style.display = 'none';
     return;
   }
 
-  // common for normal slides
   if(s.type==='intro' || s.type==='info'){
     slideArea.innerHTML = `<h1 class="fadeIn">${escapeHtml(s.title)}</h1><div class="sub">${escapeHtml(s.subtitle||'')}</div>`;
-    if(s.gif){
-      const img = document.createElement('img'); img.src = s.gif; img.alt='sparkle'; img.className='gif-inline fadeIn';
-      contentArea.appendChild(img);
-    }
+    // show inline sparkle emoji (already in slide area markup initially)
     nextBtn.style.display = 'inline-block';
   }
   else if(s.type==='input'){
     slideArea.innerHTML = `<h1 class="fadeIn">${escapeHtml(s.title)}</h1><div class="sub">${escapeHtml(s.subtitle||'')}</div>`;
-    // input UI
     const row = document.createElement('div'); row.className='answer-row fadeIn';
     row.innerHTML = `<input id="answerBox" class="answer" type="text" inputmode="text" placeholder="TYPE IN ALL CAPITALS">`;
     contentArea.appendChild(row);
     const hint = document.createElement('div'); hint.className='hint'; hint.textContent='Write the answer IN ALL CAPITALS';
     contentArea.appendChild(hint);
-    // add submit button as dynamic control
     const submit = document.createElement('button'); submit.className='btn dynamic'; submit.textContent='Submit';
     submit.addEventListener('click', handleInputSubmit);
     controls.appendChild(submit);
-    nextBtn.style.display = 'none'; // only appear after correct
+    nextBtn.style.display = 'none';
   }
   else if(s.type==='chapter'){
     slideArea.innerHTML = `<h1 class="fadeIn">${escapeHtml(s.heading)}</h1>`;
@@ -293,22 +295,18 @@ function render(){
   }
   else if(s.type==='branch_question'){
     slideArea.innerHTML = `<h1 class="fadeIn">${escapeHtml(s.title)}</h1>`;
-    // yes/no buttons appear under controls
     const yes = document.createElement('button'); yes.className='btn dynamic'; yes.textContent='Yes 😘';
     const no = document.createElement('button'); no.className='btn ghost dynamic'; no.textContent='No 😏';
     controls.appendChild(yes); controls.appendChild(no);
-    nextBtn.style.display = 'none'; // will show after response
+    nextBtn.style.display = 'none';
     yes.addEventListener('click', function(){
-      // show the favourite-food joke (single slide content) immediately in message area
       messageArea.style.color='#a300c5';
       messageArea.innerHTML = slides.find(sl=>sl.type==='text' && sl.title && sl.title.startsWith('By the way agar')).title;
-      // show Next so user can continue
       nextBtn.style.display = 'inline-block';
     });
     no.addEventListener('click', function(){
       messageArea.style.color='red';
       messageArea.innerHTML = 'Priority matters. Choose:';
-      // add try again and continue options
       const tryAgain = document.createElement('button'); tryAgain.className='btn dynamic small'; tryAgain.textContent='Try Again';
       const skip = document.createElement('button'); skip.className='btn ghost dynamic small'; skip.textContent='Skip';
       controls.appendChild(tryAgain); controls.appendChild(skip);
@@ -322,6 +320,37 @@ function render(){
   }
 }
 
+function createConfetti(){
+  // clear previous
+  confettiWrap.innerHTML = '';
+  const colors = ['#FF5C8A','#FFD166','#7BD389','#9AD0F5','#C28CFF','#FF9FC3'];
+  const count = 24;
+  for(let i=0;i<count;i++){
+    const el = document.createElement('div');
+    el.className='confetti-piece';
+    el.style.background = colors[i % colors.length];
+    // random horizontal start
+    el.style.left = (Math.random()*100) + '%';
+    el.style.top = (-Math.random()*30 - 10) + 'vh';
+    // random size
+    const w = 6 + Math.random()*10;
+    el.style.width = w + 'px';
+    el.style.height = Math.round(w*1.4) + 'px';
+    // random delay and duration
+    const dur = 1200 + Math.random()*900;
+    el.style.animationDuration = dur + 'ms';
+    el.style.animationDelay = (Math.random()*120) + 'ms';
+    confettiWrap.appendChild(el);
+  }
+}
+
+function burstConfetti(){
+  createConfetti();
+  confettiWrap.classList.add('show');
+  // remove after duration
+  setTimeout(()=>{ confettiWrap.classList.remove('show'); confettiWrap.innerHTML=''; }, 1600);
+}
+
 // handle submit for serial question
 function handleInputSubmit(){
   const box = document.getElementById('answerBox');
@@ -331,11 +360,9 @@ function handleInputSubmit(){
   if(val === correct){
     messageArea.style.color='green';
     messageArea.textContent = "PERFECT ANSWER BESTIEEE 😘🔥";
-    // remove submit and allow next
     Array.from(controls.querySelectorAll('.dynamic')).forEach(el=>el.remove());
-    // show confetti briefly
-    confetti.classList.add('show');
-    setTimeout(()=>confetti.classList.remove('show'),1400);
+    // confetti burst
+    burstConfetti();
     nextBtn.style.display = 'inline-block';
   } else {
     const playful = [
@@ -348,14 +375,13 @@ function handleInputSubmit(){
     const msg = playful[Math.floor(Math.random()*playful.length)];
     messageArea.style.color='#d40057';
     messageArea.textContent = msg;
-    // small shake on input
-    box.animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:360});
+    const boxEl = document.getElementById('answerBox');
+    if(boxEl) boxEl.animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:360});
   }
 }
 
 // next button flow
 nextBtn.addEventListener('click', function(){
-  // if current is branch_question and next visible, proceed
   if(slides[idx] && slides[idx].type==='branch_question'){
     idx++;
     render();
